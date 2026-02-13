@@ -1,8 +1,9 @@
-python-telegram-bot==20.*
-uvicorn
-starlette
+python-telegram-bot==20.7
 pyautogui
 psutil
 Pillow
 opencv-python
-pyperclip			
+pyperclip
+uvicorn
+starlette
+pyTelegramBotAPI
