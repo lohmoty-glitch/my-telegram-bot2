@@ -2,6 +2,7 @@
 import os
 import sys
 import logging
+import subprocess
 
 # =============== НАСТРОЙКА ДЛЯ RENDER ===============
 # Проверяем, что мы на Render (переменная RENDER должна быть установлена)
@@ -10,7 +11,15 @@ if 'RENDER' in os.environ:
     print("✅ Запуск на Render, настраиваем виртуальный дисплей...")
     print("=" * 50)
     
-    # Устанавливаем переменную DISPLAY вручную
+    # Создаём пустой .Xauthority файл
+    try:
+        os.system('touch ~/.Xauthority')
+        os.system('xauth generate :0 . trusted')
+        print("✅ Файл .Xauthority создан")
+    except Exception as e:
+        print(f"⚠️ Ошибка при создании .Xauthority: {e}")
+    
+    # Устанавливаем переменную DISPLAY
     os.environ['DISPLAY'] = ':0'
     
     try:
@@ -21,30 +30,59 @@ if 'RENDER' in os.environ:
         print(f"✅ DISPLAY = {os.environ.get('DISPLAY')}")
     except Exception as e:
         print(f"⚠️ Ошибка при запуске виртуального дисплея: {e}")
-        # Создаём заглушки для функций, требующих графики
-        def screenshot_stub(*args, **kwargs):
-            print("❌ Скриншоты не доступны на Render")
-            return None
         
-        def press_stub(*args, **kwargs):
-            print(f"❌ Нажатие клавиш не доступно на Render")
+        # Если виртуальный дисплей не работает, создаём заглушки
+        def create_stubs():
+            """Создаёт заглушки для всех функций pyautogui"""
+            print("🔧 Создаём заглушки для pyautogui...")
+            
+            def stub_function(*args, **kwargs):
+                print(f"❌ Функция не доступна на Render: {args}")
+                return None
+            
+            def screenshot_stub(*args, **kwargs):
+                print("❌ Скриншоты не доступны на Render")
+                return None
+            
+            # Подменяем функции pyautogui
+            try:
+                import pyautogui
+                pyautogui.screenshot = screenshot_stub
+                pyautogui.press = stub_function
+                pyautogui.click = stub_function
+                pyautogui.moveTo = stub_function
+                pyautogui.typewrite = stub_function
+                pyautogui.hotkey = stub_function
+                print("✅ Все функции pyautogui заменены заглушками")
+            except ImportError:
+                pass
         
-        # Подменяем функции pyautogui заглушками
-        try:
-            import pyautogui
-            pyautogui.screenshot = screenshot_stub
-            pyautogui.press = press_stub
-            pyautogui.click = press_stub
-            pyautogui.moveTo = press_stub
-            print("✅ Функции pyautogui заменены заглушками")
-        except ImportError:
-            pass
+        create_stubs()
 else:
     print("=" * 50)
     print("✅ Запуск на локальном компьютере")
     print("=" * 50)
 
 # Дальше идут все остальные импорты
+import telebot
+from telebot import apihelper
+import subprocess
+import pyautogui  # Теперь pyautogui импортируется после настройки
+import psutil
+import webbrowser
+import datetime
+import time
+import ctypes
+import platform
+import io
+import threading
+import cv2
+import numpy as np
+import pyperclip
+from PIL import Image, ImageGrab
+import requests
+import random
+import string
 import telebot
 from telebot import apihelper
 import subprocess
