@@ -1,0 +1,8 @@
+python-telegram-bot==20.*
+uvicorn
+starlette
+pyautogui
+psutil
+Pillow
+opencv-python
+pyperclip			
