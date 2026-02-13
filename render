@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: telegram-pc-controller
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python pc_bot.py
+    healthCheckPath: /healthcheck
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
