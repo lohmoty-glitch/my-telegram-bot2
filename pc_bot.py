@@ -1,4 +1,69 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
+import logging
+
+# =============== НАСТРОЙКА ДЛЯ RENDER ===============
+# Проверяем, что мы на Render (переменная RENDER должна быть установлена)
+if 'RENDER' in os.environ:
+    print("=" * 50)
+    print("✅ Запуск на Render, настраиваем виртуальный дисплей...")
+    print("=" * 50)
+    
+    # Устанавливаем переменную DISPLAY вручную
+    os.environ['DISPLAY'] = ':0'
+    
+    try:
+        from pyvirtualdisplay import Display
+        display = Display(visible=False, size=(1920, 1080))
+        display.start()
+        print("✅ Виртуальный дисплей успешно запущен")
+        print(f"✅ DISPLAY = {os.environ.get('DISPLAY')}")
+    except Exception as e:
+        print(f"⚠️ Ошибка при запуске виртуального дисплея: {e}")
+        # Создаём заглушки для функций, требующих графики
+        def screenshot_stub(*args, **kwargs):
+            print("❌ Скриншоты не доступны на Render")
+            return None
+        
+        def press_stub(*args, **kwargs):
+            print(f"❌ Нажатие клавиш не доступно на Render")
+        
+        # Подменяем функции pyautogui заглушками
+        try:
+            import pyautogui
+            pyautogui.screenshot = screenshot_stub
+            pyautogui.press = press_stub
+            pyautogui.click = press_stub
+            pyautogui.moveTo = press_stub
+            print("✅ Функции pyautogui заменены заглушками")
+        except ImportError:
+            pass
+else:
+    print("=" * 50)
+    print("✅ Запуск на локальном компьютере")
+    print("=" * 50)
+
+# Дальше идут все остальные импорты
+import telebot
+from telebot import apihelper
+import subprocess
+import pyautogui  # Этот импорт теперь будет после настройки
+import psutil
+import webbrowser
+import datetime
+import time
+import ctypes
+import platform
+import io
+import threading
+import cv2
+import numpy as np
+import pyperclip
+from PIL import Image, ImageGrab
+import requests
+import random
+import string# -*- coding: utf-8 -*-
 import telebot
 from telebot import apihelper
 import subprocess
@@ -20,41 +85,6 @@ from PIL import Image, ImageGrab
 import requests
 import random
 import string
-# -*- coding: utf-8 -*-
-import os
-import sys
-import logging
-
-# =============== НАСТРОЙКА ДЛЯ RENDER ===============
-# Проверяем, что мы на Render
-if 'RENDER' in os.environ:
-    print("✅ Запуск на Render, настраиваем виртуальный дисплей...")
-    try:
-        from pyvirtualdisplay import Display
-        display = Display(visible=False, size=(1920, 1080))
-        display.start()
-        print("✅ Виртуальный дисплей запущен")
-    except ImportError:
-        print("⚠️ pyvirtualdisplay не установлен")
-        
-        # Создаём заглушки для функций, требующих графики
-        def screenshot_stub():
-            print("❌ Скриншоты не доступны на Render")
-            return None
-        
-        # Подменяем функции pyautogui заглушками
-        try:
-            import pyautogui
-            pyautogui.screenshot = screenshot_stub
-            # Заглушка для нажатия клавиш
-            def press_stub(*args, **kwargs):
-                print(f"❌ Нажатие клавиш не доступно на Render")
-            pyautogui.press = press_stub
-        except ImportError:
-            pass
-
-# Дальше идёт ваш остальной код...
-# Все остальные импорты и функции остаются без изменений
 
 # =============== НАСТРОЙКИ ===============
 TOKEN = "8543792830:AAF1S5OYXzPMIUesRMbI6l8rPtcOJy5J5D0"  # Ваш токен
