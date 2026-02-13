@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.env
+.venv
+venv/
+ENV/
+env/
+*.log
+*.mp4
+*.avi
+screenshot_*.png
+screen_record*.mp4
+notify.ps1
+speak.ps1
+.DS_Store
