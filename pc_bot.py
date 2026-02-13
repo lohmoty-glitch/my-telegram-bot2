@@ -20,6 +20,41 @@ from PIL import Image, ImageGrab
 import requests
 import random
 import string
+# -*- coding: utf-8 -*-
+import os
+import sys
+import logging
+
+# =============== НАСТРОЙКА ДЛЯ RENDER ===============
+# Проверяем, что мы на Render
+if 'RENDER' in os.environ:
+    print("✅ Запуск на Render, настраиваем виртуальный дисплей...")
+    try:
+        from pyvirtualdisplay import Display
+        display = Display(visible=False, size=(1920, 1080))
+        display.start()
+        print("✅ Виртуальный дисплей запущен")
+    except ImportError:
+        print("⚠️ pyvirtualdisplay не установлен")
+        
+        # Создаём заглушки для функций, требующих графики
+        def screenshot_stub():
+            print("❌ Скриншоты не доступны на Render")
+            return None
+        
+        # Подменяем функции pyautogui заглушками
+        try:
+            import pyautogui
+            pyautogui.screenshot = screenshot_stub
+            # Заглушка для нажатия клавиш
+            def press_stub(*args, **kwargs):
+                print(f"❌ Нажатие клавиш не доступно на Render")
+            pyautogui.press = press_stub
+        except ImportError:
+            pass
+
+# Дальше идёт ваш остальной код...
+# Все остальные импорты и функции остаются без изменений
 
 # =============== НАСТРОЙКИ ===============
 TOKEN = "8543792830:AAF1S5OYXzPMIUesRMbI6l8rPtcOJy5J5D0"  # Ваш токен
